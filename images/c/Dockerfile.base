@@ -1,0 +1,9 @@
+FROM gcc:13.2
+
+WORKDIR /app
+
+COPY . .
+
+RUN find . -maxdepth 1 -name "Makefile" -exec make \;
+
+ENTRYPOINT ["./compiled-app"]

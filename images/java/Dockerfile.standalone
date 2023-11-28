@@ -1,0 +1,11 @@
+FROM maven:3.9.5-eclipse-temurin-21
+
+WORKDIR /app
+
+COPY app/pom.xml app/
+RUN cd app/ && mvn install
+
+COPY . .
+RUN cd app && mvn package
+
+ENTRYPOINT ["java", "-jar", "app/target/app.jar"]

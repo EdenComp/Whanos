@@ -1,0 +1,9 @@
+FROM node:20.9
+
+WORKDIR /app
+
+COPY . .
+
+RUN find . -maxdepth 1 -name "package.json" -exec npm install \;
+
+ENTRYPOINT ["node", "."]

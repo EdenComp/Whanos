@@ -4,13 +4,14 @@ if [ $# -eq 0 ] || [ $1 = "-h" ]; then
     exit 1
 fi
 
+BRANCH_PARAM=""
+if [ $# -eq 2 ]; then
+    BRANCH_PARAM="--branch $2"
+fi
+
 mkdir -p /tmp/whanos
 rm -rf /tmp/whanos/repository
-git clone $1 /tmp/whanos/repository && cd /tmp/whanos/repository
-
-if [ $# -eq 2 ]; then
-    git switch $2
-fi
+git clone $1 $BRANCH_PARAM /tmp/whanos/repository && cd /tmp/whanos/repository
 
 # Find if the repo is whanos-compatible
 VALID_CRITERIA=0

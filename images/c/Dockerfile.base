@@ -2,8 +2,10 @@ FROM gcc:13.2
 
 WORKDIR /app
 
-COPY . .
+SHELL ["/bin/bash", "-c"]
 
-RUN find . -maxdepth 1 -name "Makefile" -exec make \;
+ONBUILD COPY . .
+
+ONBUILD RUN make
 
 ENTRYPOINT ["./compiled-app"]

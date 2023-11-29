@@ -2,8 +2,12 @@ FROM maven:3.9.5-eclipse-temurin-21
 
 WORKDIR /app
 
-COPY . .
+SHELL ["/bin/bash", "-c"]
 
-RUN find . -maxdepth 2 -path "*/app/pom.xml" -exec mvn package -f app/pom.xml \;
+ONBUILD COPY app/pom.xml app/
+ONBUILD RUN cd app/ && mvn install
+
+ONBUILD COPY . .
+ONBUILD RUN cd app && mvn package
 
 ENTRYPOINT ["java", "-jar", "app/target/app.jar"]

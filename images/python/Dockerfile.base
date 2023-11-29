@@ -2,8 +2,11 @@ FROM python:3.12
 
 WORKDIR /app
 
-COPY . .
+SHELL ["/bin/bash", "-c"]
 
-RUN find . -maxdepth 1 -name "requirements.txt" -exec pip install -r requirements.txt \;
+ONBUILD COPY requirements.txt .
+ONBUILD RUN pip install -r requirements.txt
+
+ONBUILD COPY . .
 
 ENTRYPOINT ["python", "-m", "app"]

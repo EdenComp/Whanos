@@ -9,7 +9,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy to production
-    environment: Production
     concurrency:
       group: ${{ github.workflow }}
     steps:
@@ -17,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Run Ansible Playbook
         run: |
-          # ansible-playbook -i inventory.yml deploy.yml
+          # ansible-playbook -i ansible/inventory ansible/deploy.yml --${{ secrets.SSH_KEY }}
       - name: Deploying the new supervisor & workers
         uses: kostya-ten/ssh-server-deploy@v4
         with:

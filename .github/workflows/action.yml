@@ -26,6 +26,18 @@ jobs:
       run: |
         ansible-playbook -i inventory.yml deploy.yml
 
+    - name: Start Jenkins
+      run: |
+        # Start Jenkins
+
+    - name: Start docker registry
+      run: |
+        # Start docker registry
+
+    - name: Start k8s
+      run: |
+        # Start k8s
+
     - name: Launch Shell on Server
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'bash'

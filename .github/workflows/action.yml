@@ -20,7 +20,7 @@ jobs:
 
     - name: Clone Repository on Server
       run: |
-        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} 'git clone https://github.com/EdenComp/Whanos.git .
+        git clone ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/https://github.com/EdenComp/Whanos.git
 
     - name: Run Ansible Playbook
       run: |

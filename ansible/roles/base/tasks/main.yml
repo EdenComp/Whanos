@@ -1,0 +1,16 @@
+---
+- name: update packages
+  become: yes
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: install git
+  become: yes
+  apt:
+    name: git
+
+- name: set timezone
+  become: yes
+  timezone:
+    name: Europe/Paris

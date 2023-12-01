@@ -1,0 +1,15 @@
+---
+- name: Base role - Applies to all the machines
+  hosts: all
+  roles:
+    - base
+
+- name: Jenkins role - Applies to the main machine
+  hosts: jenkins
+  roles:
+    - jenkins
+
+- name: k8s role - Applies to the k8s nodes
+  hosts: k8s
+  roles:
+    - k8s

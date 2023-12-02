@@ -1,0 +1,26 @@
+- name: Installing packets
+  become: true
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - git
+      - emacs-nox
+      - unzip
+      - zsh
+    state: present
+
+- name: Upgrade distribution
+  ignore_errors: true
+  become: true
+  apt:
+    upgrade: dist
+    update_cache: yes
+    state: latest
+    cache_valid_time: 3600
+
+- name: Change timezone
+  become: true
+  community.general.timezone:
+    name: Europe/Paris

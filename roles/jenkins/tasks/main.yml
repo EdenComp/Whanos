@@ -1,0 +1,24 @@
+- name: Install java
+  become: true
+  apt:
+    name: "openjdk-11-jdk"
+    state: present
+
+- name: Install jenkins key
+  become: true
+  get_url:
+    url: "https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
+    dest: "/usr/share/keyrings/jenkins-keyring.asc"
+
+- name: add jenkins repo
+  become: true
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
+    state: present
+    filename: "jenkins.list"
+
+- name: Install jenkins
+  become: true
+  apt:
+    name: "jenkins"
+    state: present

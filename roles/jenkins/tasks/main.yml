@@ -1,24 +1,55 @@
-- name: Install java
+- name: install java
   become: true
   apt:
-    name: "openjdk-11-jdk"
-    state: present
+    name: "openjdk-17-jdk"
+    state: "present"
 
-- name: Install jenkins key
+- name: install jenkins key
   become: true
   get_url:
     url: "https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
     dest: "/usr/share/keyrings/jenkins-keyring.asc"
 
-- name: add jenkins repo
+- name: install jenkins to repo
   become: true
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
-    state: present
+    state: "present"
     filename: "jenkins.list"
 
-- name: Install jenkins
+- name: install jenkins
   become: true
   apt:
     name: "jenkins"
+    state: "present"
+
+- name: install jenkins plugin
+  vars:
+    url: "192.168.0.14"
+    port: "8080"
+    jenkins_plugin_name:
+      - name: configuration-as-code
+      - name: cloudbees-folder
+      - name: credentials
+      - name: github
+      - name: instance-identity
+      - name: job-dsl
+      - name: script-security
+      - name: structs
+      - name: role-strategy
+      - name: ws-cleanup
+      - name: matrix-auth
+  become: true
+  jenkins_plugin:
+    name: "{{ item.name }}"
     state: present
+    url: "http://{{ url }}:{{ port }}"
+    url_username: "admin"
+    url_password: "aea1d753a2c54ad6babe6d09100a5c4d"
+    with_dependencies: yes
+  with_items: "{{ jenkins_plugin_name }}"
+
+- name: Restart Jenkins if required
+  service:
+      name: jenkins
+      state: restarted

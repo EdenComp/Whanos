@@ -14,9 +14,50 @@ jenkins:
           name: "admin"
           permissions:
           - "Overall/Administer"
+jobs:
+  - script: >
+      folder('Whanos_base_images') {
+        displayName('Whanos base images')
+        description('Folder for Whanos base images')
+      }
+  - script: >
+      folder('Projects') {
+        displayName('Projects')
+        description('Folder for projects')
+      }
+
+  - script: >
+      freeStyleJob('Whanos_base_images/whanos-c') {
+        steps {
+          shell('docker build -t image-c -f Dockerfile.base .')
+        }
+      }
+  - script: >
+      freeStyleJob('Whanos_base_images/whanos-java') {
+        steps {
+          shell('docker build -t image-java -f Dockerfile.base .')
+        }
+      }
+  - script: >
+      freeStyleJob('Whanos_base_images/whanos-javascript') {
+        steps {
+          shell('docker build -t image-javascript -f Dockerfile.base .')
+        }
+      }
+  - script: >
+      freeStyleJob('Whanos_base_images/whanos-python') {
+        steps {
+          shell('docker build -t image-python -f Dockerfile.base .')
+        }
+      }
+  - script: >
+      freeStyleJob('Whanos_base_images/whanos-befunge') {
+        steps {
+          shell('docker build -t image-befunge -f Dockerfile.base .')
+        }
+      }
+
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
 
-jobs:
-- file: ./job_dsl.groovy

@@ -1,0 +1,11 @@
+FROM gcc:13.2
+
+WORKDIR /app
+
+SHELL ["/bin/bash", "-c"]
+
+COPY . .
+
+RUN make
+
+ENTRYPOINT ["./compiled-app"]

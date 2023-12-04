@@ -15,13 +15,4 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           # ansible-playbook -i ansible/inventory ansible/deploy.yml --${{ secrets.SSH_KEY }}
-      - name: Deploying on server
-        uses: kostya-ten/ssh-server-deploy@v4
-        with:
-          host: ${{ secrets.SERVICES_SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          private_key: ${{ secrets.SSH_KEY }}
-          scp_source: .
-          scp_target: ${{ secrets.SCP_TARGET }}
-          after_script: |
-            echo hello world
+

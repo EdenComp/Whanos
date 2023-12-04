@@ -15,9 +15,11 @@ jenkins:
           permissions:
           - "Overall/Administer"
 jobs:
-
   - script: >
       freeStyleJob('Whanos_base_images/Build all base images') {
+        parameters {
+          stringParam('project', 'whanos-c, whanos-java, whanos-python, whanos-javascript, whanos-befunge', 'Project to build')
+        }
           description('')
           keepDependencies(false)
           disabled(false)
@@ -37,6 +39,22 @@ jobs:
       folder('Projects') {
         displayName('Projects')
         description('Folder for projects')
+      }
+
+  - script: >
+      freeStyleJob('link-project') {
+        parameters {
+          stringParam('GITHUB_URL', "")
+          stringParam('PROJECT_NAME', "")
+        }
+        steps {
+         freeStyleJob('Projects/DynamicallyCreatedJob') {
+           script {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: "${params.GIT_REPO_URL}"]]])
+                echo 'Build your project here'
+              }
+          }
+        }
       }
 
   - script: >

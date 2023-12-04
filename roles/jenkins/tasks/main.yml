@@ -25,7 +25,7 @@
 
 - name: install jenkins plugin
   vars:
-    url: "192.168.0.14"
+    url: "10.0.2.15"
     port: "8080"
     jenkins_plugin_name:
       - name: configuration-as-code
@@ -45,11 +45,21 @@
     state: present
     url: "http://{{ url }}:{{ port }}"
     url_username: "admin"
-    url_password: "aea1d753a2c54ad6babe6d09100a5c4d"
+    url_password: "c035514332ff417b814ee507e0877cf5"
     with_dependencies: yes
   with_items: "{{ jenkins_plugin_name }}"
+  register: jenkins_plugin
 
 - name: Restart Jenkins if required
   service:
       name: jenkins
       state: restarted
+  when: jenkins_plugin.changed
+
+- name: install jenkins cli
+  become: true
+  get_url:
+    url: "https://github.com/jenkins-zh/jenkins-cli/releases/latest/download/jcli-linux-amd64.tar.gz"
+    dest: "/tmp/ansible"
+    mode: "0755"
+    unarchive: true

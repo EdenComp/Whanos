@@ -14,8 +14,8 @@
   become: true
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
-    state: "present"
     filename: "jenkins.list"
+    state: "present"
 
 - name: install jenkins
   become: true
@@ -23,29 +23,29 @@
     name: "jenkins"
     state: "present"
 
-- name: install jenkins plugin
+- name: install jenkins plugins
   vars:
-    url: "10.0.2.15"
-    port: "8080"
     jenkins_plugin_name:
-      - name: configuration-as-code
       - name: cloudbees-folder
+      - name: configuration-as-code
       - name: credentials
+      - name: docker-plugin
+      - name: docker-workflow
       - name: github
       - name: instance-identity
       - name: job-dsl
+      - name: matrix-auth
+      - name: role-strategy
       - name: script-security
       - name: structs
-      - name: role-strategy
       - name: ws-cleanup
-      - name: matrix-auth
   become: true
   jenkins_plugin:
     name: "{{ item.name }}"
     state: present
-    url: "http://{{ url }}:{{ port }}"
+    url: "http://localhost:8080"
     url_username: "admin"
-    url_password: "c035514332ff417b814ee507e0877cf5"
+    url_password: "admin"
     with_dependencies: yes
   with_items: "{{ jenkins_plugin_name }}"
   register: jenkins_plugin
@@ -55,11 +55,3 @@
       name: jenkins
       state: restarted
   when: jenkins_plugin.changed
-
-- name: install jenkins cli
-  become: true
-  get_url:
-    url: "https://github.com/jenkins-zh/jenkins-cli/releases/latest/download/jcli-linux-amd64.tar.gz"
-    dest: "/tmp/ansible"
-    mode: "0755"
-    unarchive: true

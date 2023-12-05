@@ -5,10 +5,13 @@
     upgrade: yes
     update_cache: yes
 
-- name: install git
+- name: install required packages
   become: yes
   apt:
-    name: git
+    name:
+      - git
+      - unzip
+    state: present
 
 - name: set timezone
   become: yes

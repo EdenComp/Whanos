@@ -48,11 +48,11 @@ jobs:
           stringParam('PROJECT_NAME', "")
         }
         steps {
-         freeStyleJob('Projects/DynamicallyCreatedJob') {
+         freeStyleJob('Projects/${params.PROJECT_NAME}') {
            script {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: "${params.GIT_REPO_URL}"]]])
                 echo 'Build your project here'
-              }
+            }
           }
         }
       }
@@ -91,4 +91,3 @@ jobs:
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
-

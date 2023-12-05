@@ -1,6 +1,0 @@
-- name: common task to all hosts
-  hosts: all
-  roles:
-    - base
-    - jenkins
-  become: true

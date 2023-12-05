@@ -1,5 +1,0 @@
-FROM whanos-befunge-internal:latest
-
-WORKDIR /app
-
-COPY . .

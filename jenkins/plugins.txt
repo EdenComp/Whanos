@@ -1,13 +1,13 @@
 cloudbees-folder:latest
 configuration-as-code:latest
 credentials:latest
+docker-plugin:latest
+docker-workflow:latest
 github:latest
 instance-identity:latest
 job-dsl:latest
+matrix-auth:latest
+role-strategy:latest
 script-security:latest
 structs:latest
-role-strategy:latest
 ws-cleanup:latest
-matrix-auth:latest
-docker-workflow:latest
-docker-plugin:latest

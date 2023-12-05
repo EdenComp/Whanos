@@ -11,5 +11,3 @@
 
 - name: k8s role - Applies to the k8s nodes
   hosts: k8s
-  roles:
-    - k8s

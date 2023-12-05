@@ -23,35 +23,8 @@
     name: "jenkins"
     state: "present"
 
-- name: install jenkins plugins
-  vars:
-    jenkins_plugin_name:
-      - name: cloudbees-folder
-      - name: configuration-as-code
-      - name: credentials
-      - name: docker-plugin
-      - name: docker-workflow
-      - name: github
-      - name: instance-identity
-      - name: job-dsl
-      - name: matrix-auth
-      - name: role-strategy
-      - name: script-security
-      - name: structs
-      - name: ws-cleanup
-  become: true
-  jenkins_plugin:
-    name: "{{ item.name }}"
-    state: present
-    url: "http://localhost:8080"
-    url_username: "admin"
-    url_password: "admin"
-    with_dependencies: yes
-  with_items: "{{ jenkins_plugin_name }}"
-  register: jenkins_plugin
-
 - name: Restart Jenkins if required
   service:
       name: jenkins
       state: restarted
-  when: jenkins_plugin.changed
+      enabled: yes

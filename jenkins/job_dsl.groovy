@@ -10,31 +10,32 @@ folder('Projects') {
 
 freeStyleJob('Whanos_base_images/whanos-c') {
     steps {
-        shell('docker build -t image-c -f Dockerfile.base .')
+        shell('docker build -t whanos-c -f /whanos/images/c/Dockerfile.base .')
     }
 }
 
 freeStyleJob('Whanos_base_images/whanos-java') {
     steps {
-        shell('docker build -t image-java -f Dockerfile.base .')
+        shell('docker build -t whanos-java -f /whanos/images/java/Dockerfile.base .')
     }
 }
 
 freeStyleJob('Whanos_base_images/whanos-javascript') {
     steps {
-        shell('docker build -t image-javascript -f Dockerfile.base .')
+        shell('docker build -t whanos-javascript -f /whanos/images/javascript/Dockerfile.base .')
     }
 }
 
 freeStyleJob('Whanos_base_images/whanos-python') {
     steps {
-        shell('docker build -t image-python -f Dockerfile.base .')
+        shell('docker build -t whanos-python -f /whanos/images/python/Dockerfile.base .')
     }
 }
 
 freeStyleJob('Whanos_base_images/whanos-befunge') {
     steps {
-        shell('docker build -t image-befunge -f Dockerfile.base .')
+        shell('cd /whanos/images/befunge/app ; docker build -t whanos-befunge-internal -f /whanos/images/befunge/Dockerfile.internal .')
+        shell('docker build -t whanos-befunge -f /whanos/images/befunge/Dockerfile.base .')
     }
 }
 

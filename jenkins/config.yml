@@ -6,7 +6,7 @@ jenkins:
        - id: admin
          name: admin
          password: "admin"
-  systemMessage: "Welcome to Jenkins!"
+  systemMessage: "Welcome to Whanos"
   authorizationStrategy:
     globalMatrix:
       entries:
@@ -14,80 +14,6 @@ jenkins:
           name: "admin"
           permissions:
           - "Overall/Administer"
+
 jobs:
-  - script: >
-      freeStyleJob('Whanos_base_images/Build all base images') {
-        parameters {
-          stringParam('project', 'whanos-c, whanos-java, whanos-python, whanos-javascript, whanos-befunge', 'Project to build')
-        }
-          description('')
-          keepDependencies(false)
-          disabled(false)
-          concurrentBuild(false)
-
-          publishers {
-              downstream("whanos-c, whanos-java, whanos-python, whanos-javascript, whanos-befunge", "SUCCESS")
-          }
-      }
-
-  - script: >
-      folder('Whanos_base_images') {
-        displayName('Whanos base images')
-        description('Folder for Whanos base images')
-      }
-  - script: >
-      folder('Projects') {
-        displayName('Projects')
-        description('Folder for projects')
-      }
-
-  - script: >
-      freeStyleJob('link-project') {
-        parameters {
-          stringParam('GITHUB_URL', "")
-          stringParam('PROJECT_NAME', "")
-        }
-        steps {
-         freeStyleJob('Projects/${params.PROJECT_NAME}') {
-           script {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: "${params.GIT_REPO_URL}"]]])
-                echo 'Build your project here'
-            }
-          }
-        }
-      }
-
-  - script: >
-      freeStyleJob('Whanos_base_images/whanos-c') {
-        steps {
-          shell('docker build -t image-c -f Dockerfile.base .')
-        }
-      }
-  - script: >
-      freeStyleJob('Whanos_base_images/whanos-java') {
-        steps {
-          shell('docker build -t image-java -f Dockerfile.base .')
-        }
-      }
-  - script: >
-      freeStyleJob('Whanos_base_images/whanos-javascript') {
-        steps {
-          shell('docker build -t image-javascript -f Dockerfile.base .')
-        }
-      }
-  - script: >
-      freeStyleJob('Whanos_base_images/whanos-python') {
-        steps {
-          shell('docker build -t image-python -f Dockerfile.base .')
-        }
-      }
-  - script: >
-      freeStyleJob('Whanos_base_images/whanos-befunge') {
-        steps {
-          shell('docker build -t image-befunge -f Dockerfile.base .')
-        }
-      }
-
-security:
-  globalJobDslSecurityConfiguration:
-    useScriptSecurity: false
+  - file: ./job_dsl.groovy

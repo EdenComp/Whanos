@@ -31,7 +31,7 @@
   lineinfile:
     dest=/usr/lib/systemd/system/jenkins.service
     regexp='^Environment="JAVA_OPTS=-Djava.awt.headless=true'
-    line='Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+    line='Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Dcasc.jenkins.config=/var/lib/jenkins/config.yaml"'
   when: jenkins_install.changed
 
 - name: Restart Jenkins
@@ -57,6 +57,18 @@
     url_password: "{{ jenkins_default_password.stdout }}"
     with_dependencies: yes
   with_items: "{{ lookup('ansible.builtin.file', '../../../jenkins/plugins.txt') | split('\n') }}"
+  when: jenkins_install.changed
+
+- name: Copy Jenkins configuration
+  ansible.builtin.copy:
+    src: ../../../jenkins/config.yml
+    dest: /var/lib/jenkins/config.yaml
+  when: jenkins_install.changed
+
+- name: Copy Jenkins Job DSL
+  ansible.builtin.copy:
+    src: ../../../jenkins/job_dsl.groovy
+    dest: /var/lib/jenkins/job_dsl.groovy
   when: jenkins_install.changed
 
 - name: Restart Jenkins

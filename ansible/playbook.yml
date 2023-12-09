@@ -1,4 +1,3 @@
----
 - name: Base role - Applies to all the machines
   hosts: all
   roles:

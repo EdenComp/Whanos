@@ -5,7 +5,7 @@
   become: true
   apt:
     name: "openjdk-17-jdk"
-    state: "present"
+    state: present
 
 - name: Install Jenkins key
   become: true
@@ -18,14 +18,27 @@
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
     filename: "jenkins.list"
-    state: "present"
+    state: present
 
 - name: Install Jenkins
   become: true
   apt:
     name: "jenkins"
-    state: "present"
+    state: present
   register: jenkins_install
+
+- name: Add jenkins user to group docker
+  user:
+    name: jenkins
+    groups: docker
+    append: true
+  register: jenkins_docker
+
+- name: Restart Docker
+  service:
+    name: docker
+    state: restarted
+  when: jenkins_docker.changed
 
 - name: Skip Jenkins setup
   lineinfile:
@@ -55,7 +68,7 @@
     url: "http://{{ ipify_public_ip }}:8080"
     url_username: "admin"
     url_password: "{{ jenkins_default_password.stdout }}"
-    with_dependencies: yes
+    with_dependencies: true
   with_items: "{{ lookup('ansible.builtin.file', '../../../jenkins/plugins.txt') | split('\n') }}"
   when: jenkins_install.changed
 
@@ -63,16 +76,14 @@
   ansible.builtin.copy:
     src: ../../../jenkins/config.yml
     dest: /var/lib/jenkins/config.yaml
-  when: jenkins_install.changed
 
 - name: Copy Jenkins Job DSL
   ansible.builtin.copy:
     src: ../../../jenkins/job_dsl.groovy
     dest: /var/lib/jenkins/job_dsl.groovy
-  when: jenkins_install.changed
 
 - name: Restart Jenkins
   service:
     name: jenkins
     state: restarted
-    enabled: yes
+    enabled: true

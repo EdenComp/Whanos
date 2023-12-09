@@ -1,30 +1,65 @@
-- name: install java
+- name: Get host public IP
+  ipify_facts:
+
+- name: Install Java
   become: true
   apt:
     name: "openjdk-17-jdk"
     state: "present"
 
-- name: install jenkins key
+- name: Install Jenkins key
   become: true
   get_url:
     url: "https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
     dest: "/usr/share/keyrings/jenkins-keyring.asc"
 
-- name: install jenkins to repo
+- name: Install Jenkins repo
   become: true
   apt_repository:
     repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
     filename: "jenkins.list"
     state: "present"
 
-- name: install jenkins
+- name: Install Jenkins
   become: true
   apt:
     name: "jenkins"
     state: "present"
+  register: jenkins_install
 
-- name: Restart Jenkins if required
+- name: Skip Jenkins setup
+  lineinfile:
+    dest=/usr/lib/systemd/system/jenkins.service
+    regexp='^Environment="JAVA_OPTS=-Djava.awt.headless=true'
+    line='Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
+  when: jenkins_install.changed
+
+- name: Restart Jenkins
   service:
-      name: jenkins
-      state: restarted
-      enabled: yes
+    name: jenkins
+    state: restarted
+    daemon_reload: true
+  when: jenkins_install.changed
+
+- name: Get Jenkins default password
+  shell: 'cat /var/lib/jenkins/secrets/initialAdminPassword'
+  register: jenkins_default_password
+  when: jenkins_install.changed
+
+- name: Install Jenkins plugins
+  become: true
+  jenkins_plugin:
+    name: "{{ item }}"
+    state: present
+    url: "http://{{ ipify_public_ip }}:8080"
+    url_username: "admin"
+    url_password: "{{ jenkins_default_password.stdout }}"
+    with_dependencies: yes
+  with_items: "{{ lookup('ansible.builtin.file', '../../../jenkins/plugins.txt') | split('\n') }}"
+  when: jenkins_install.changed
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+    enabled: yes

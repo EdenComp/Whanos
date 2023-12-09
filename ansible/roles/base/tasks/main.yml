@@ -1,11 +1,11 @@
 ---
-- name: update packages
+- name: Update packages
   become: yes
   apt:
     upgrade: yes
     update_cache: yes
 
-- name: install required packages
+- name: Install required packages
   become: yes
   apt:
     name:
@@ -13,7 +13,7 @@
       - unzip
     state: present
 
-- name: set timezone
+- name: Set timezone
   become: yes
   timezone:
     name: Europe/Paris

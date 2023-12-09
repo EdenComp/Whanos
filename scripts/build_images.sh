@@ -1,4 +1,4 @@
-GIT_ROOT_PATH=$(git rev-parse --show-toplevel)
+GIT_ROOT_PATH=$(git rev-parse --show-toplevel || echo "../images")
 IMAGES_DIR=$GIT_ROOT_PATH/images
 
 docker build $IMAGES_DIR/befunge/app --file $IMAGES_DIR/befunge/Dockerfile.internal -t whanos-befunge-internal:latest

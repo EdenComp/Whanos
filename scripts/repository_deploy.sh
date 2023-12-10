@@ -47,9 +47,11 @@ fi
 SCRIPT_DIR=$(realpath $(dirname $0))
 
 if [ -f "Dockerfile" ]; then
-  docker build . -t $IMAGE_NAME:latest
+  docker build . -t ghcr.io/edencomp/whanos-$IMAGE_NAME:latest
 else
-  docker build . --file $SCRIPT_DIR/../images/$LANGUAGE/Dockerfile.standalone -t $IMAGE_NAME:latest
+  docker build . --file $SCRIPT_DIR/../images/$LANGUAGE/Dockerfile.standalone -t ghcr.io/edencomp/whanos-$IMAGE_NAME:latest
 fi
 
-# TODO: Deploy image on docker registry + k8s
+docker push ghcr.io/edencomp/whanos-$IMAGE_NAME:latest
+
+# TODO: k8s

@@ -3,17 +3,21 @@ jenkins:
     local:
       allowsSignup: false
       users:
-       - id: admin
-         name: admin
-         password: "admin"
+        - id: admin
+          name: admin
+          password: "admin"
   systemMessage: "Welcome to Whanos"
   authorizationStrategy:
     globalMatrix:
       entries:
-      - user:
-          name: "admin"
-          permissions:
-          - "Overall/Administer"
+        - user:
+            name: "admin"
+            permissions:
+              - "Overall/Administer"
 
 jobs:
   - file: ./job_dsl.groovy
+
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false

@@ -76,6 +76,14 @@
   ansible.builtin.copy:
     src: ../../../jenkins/config.yml
     dest: /var/lib/jenkins/config.yaml
+  register: jenkins_config
+
+- name: Set Jenkins admin password
+  lineinfile: |
+    dest=/var/lib/jenkins/config.yaml
+    regexp='^ {10}password: "admin"'
+    line='          password: "{{ jenkins_admin_password }}"'
+  when: jenkins_config.changed
 
 - name: Copy Jenkins Job DSL
   ansible.builtin.copy:

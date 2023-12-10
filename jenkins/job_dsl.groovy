@@ -40,9 +40,45 @@ freeStyleJob('Whanos_base_images/whanos-befunge') {
 }
 
 freeStyleJob('Whanos_base_images/Build all base images') {
-    keepDependencies(false)
+    keepDependencies(true)
     concurrentBuild(true)
     publishers {
         downstream("whanos-c, whanos-java, whanos-python, whanos-javascript, whanos-befunge", "SUCCESS")
+    }
+}
+
+freeStyleJob("Projects/Link Project") {
+    parameters {
+        stringParam("PROJECT_REPO", null, "Project repository (HTTPS)")
+        stringParam("PROJECT_NAME", null, "Project display name")
+        stringParam("IMAGE_NAME", null, "Name of the docker image (kebab-case)")
+        stringParam("BRANCH", "main", "Branch")
+        textParam("SSH_PRIVATE_KEY", null, "SSH private key (for private repositories)")
+    }
+    steps {
+        dsl {
+            text('''freeStyleJob("Projects/\$PROJECT_NAME") {
+                triggers {
+                    scm("* * * * *")
+                }
+                scm {
+                    git {
+                        remote {
+                            url("\$PROJECT_REPO")
+                        }
+                        branch("\$BRANCH")
+                    }
+                }
+                steps {
+                    shell("/whanos/scripts/repository_deploy.sh `pwd` \$IMAGE_NAME")
+                }
+                wrappers {
+                    preBuildCleanup {
+                        deleteDirectories(false)
+                        cleanupParameter()
+                    }
+                }
+            }''')
+        }
     }
 }

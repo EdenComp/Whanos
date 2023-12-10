@@ -37,11 +37,14 @@
     name: Europe/Paris
 
 - name: Copy Whanos images
-  ansible.builtin.copy:
+  synchronize:
     src: ../../../images
     dest: /whanos
+    rsync_opts:
+      - "--exclude=node_modules"
 
-- name: Copy deployment script
+- name: Copy deployment scripts
   ansible.builtin.copy:
-    src: ../../../scripts/repository_deploy.sh
-    dest: /whanos/repository_deploy.sh
+    src: ../../../scripts
+    dest: /whanos
+    mode: 0755

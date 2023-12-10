@@ -1,13 +1,18 @@
 # Arguments handling
 if [ $# -eq 0 ] || [ $1 = "-h" ]; then
-    echo "Usage: $0 <directory>"
+    echo "Usage: $0 <directory> [project name]"
     exit 1
 fi
 
 # Find if the repo is whanos-compatible
 VALID_CRITERIA=0
-REPO_NAME=$(basename -s .git `git config --get remote.origin.url` | tr '[:upper:]' '[:lower:]')
+if [ -z "$2" ]; then
+    IMAGE_NAME=$(basename -s .git `git config --get remote.origin.url` | sed 's/\([^A-Z]\)\([A-Z0-9]\)/\1-\2/g' | sed 's/\([A-Z0-9]\)\([A-Z0-9]\)\([^A-Z]\)/\1-\2\3/g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+else
+    IMAGE_NAME=$2
+fi
 
+echo $PROJECT_NAME
 if [ -f "app/main.bf" ]; then
     VALID_CRITERIA=$((VALID_CRITERIA+1))
     LANGUAGE="befunge"
@@ -42,9 +47,9 @@ fi
 SCRIPT_DIR=$(realpath $(dirname $0))
 
 if [ -f "Dockerfile" ]; then
-  docker build . -t $REPO_NAME:latest
+  docker build . -t $IMAGE_NAME:latest
 else
-  docker build . --file $SCRIPT_DIR/../images/$LANGUAGE/Dockerfile.standalone -t $REPO_NAME:latest
+  docker build . --file $SCRIPT_DIR/../images/$LANGUAGE/Dockerfile.standalone -t $IMAGE_NAME:latest
 fi
 
 # TODO: Deploy image on docker registry + k8s

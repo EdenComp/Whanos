@@ -49,8 +49,9 @@ freeStyleJob('Whanos_base_images/Build all base images') {
 
 freeStyleJob("Projects/Link Project") {
     parameters {
-        stringParam("GITHUB_REPO", null, "GitHub repository")
-        stringParam("PROJECT_NAME", null, "Project name")
+        stringParam("PROJECT_REPO", null, "Project repository (HTTPS)")
+        stringParam("PROJECT_NAME", null, "Project display name")
+        stringParam("IMAGE_NAME", null, "Name of the docker image (kebab-case)")
         stringParam("BRANCH", "main", "Branch")
         textParam("SSH_PRIVATE_KEY", null, "SSH private key (for private repositories)")
     }
@@ -63,12 +64,13 @@ freeStyleJob("Projects/Link Project") {
                 scm {
                     git {
                         remote {
-                            url("\$GITHUB_REPO")
+                            url("\$PROJECT_REPO")
                         }
+                        branch("\$BRANCH")
                     }
                 }
                 steps {
-                    shell("/whanos/scripts/repository_deploy.sh `pwd`")
+                    shell("/whanos/scripts/repository_deploy.sh `pwd` \$IMAGE_NAME")
                 }
                 wrappers {
                     preBuildCleanup {

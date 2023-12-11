@@ -49,11 +49,14 @@ freeStyleJob('Whanos_base_images/Build all base images') {
 
 freeStyleJob("Projects/Link Project") {
     parameters {
-        stringParam("PROJECT_REPO", null, "Project repository (HTTPS)")
+        stringParam("PROJECT_REPO", null, "Project repository (HTTPS for public or SSH for private)")
         stringParam("PROJECT_NAME", null, "Project display name")
         stringParam("IMAGE_NAME", null, "Name of the docker image (kebab-case)")
         stringParam("BRANCH", "main", "Branch")
-        textParam("SSH_PRIVATE_KEY", null, "SSH private key (for private repositories)")
+        credentialsParam('SSH_PRIVATE_KEY') {
+            type('com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey')
+            description('SSH private key (for private repositories)')
+        }
     }
     steps {
         dsl {
@@ -65,6 +68,7 @@ freeStyleJob("Projects/Link Project") {
                     git {
                         remote {
                             url("\$PROJECT_REPO")
+                            credentials("$SSH_PRIVATE_KEY")
                         }
                         branch("\$BRANCH")
                     }

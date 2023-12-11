@@ -19,5 +19,7 @@ jobs:
   - file: ./job_dsl.groovy
 
 security:
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "noHostKeyVerificationStrategy"
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false

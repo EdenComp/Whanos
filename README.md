@@ -1,3 +1,3 @@
 # Whanos - La guerre des baleines
 
-Please follow the documentation available [here](edencomp.github.io/Whanos).
+Please follow the documentation available [here](https://edencomp.github.io/Whanos).

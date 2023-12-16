@@ -2,7 +2,7 @@
 
 We use Ansible to configure the servers. Here are all the steps to use Ansible and get the Whanos infrastructure deployed.
 
-## Part 1 : Jenkins
+## Jenkins
 
 The first Ansible inventory only needs one server, and is the server in which Jenkins will be installed.
 
@@ -17,3 +17,9 @@ bash ./scripts/deploy_jenkins.sh
 
 Please follow the steps and provide the necessary information.
 After the script is finished, Jenkins will be fully installed and configured on your server.
+
+## Kubernetes
+
+The second Ansible inventory needs two servers or more, in which Kubernetes will be installed.
+
+The playbook is unfortunately not ready yet.

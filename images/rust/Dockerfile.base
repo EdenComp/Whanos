@@ -1,0 +1,13 @@
+FROM rust:1.74
+
+WORKDIR /app
+
+SHELL ["/bin/bash", "-c"]
+
+ONBUILD COPY . .
+
+ONBUILD RUN cargo build --release
+
+ONBUILD RUN find target/release -maxdepth 1 -type f -executable -exec cp {} compiled-app \;
+
+ENTRYPOINT ["./compiled-app"]

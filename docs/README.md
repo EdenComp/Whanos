@@ -11,9 +11,9 @@ Whanos is a project that aims to automatize any projets using the following lang
 - Befunge
 - Rust
 
-The automation is done by automatically fetching your repository for changes, and by automatically building and deploying your application!
+The automation is done by automatically fetching your repository for changes, and by automatically building and deploying your application, which can be deployed on Kubernetes after it!
 
-> Work in progress: Automatically deploy your application on Kubernetes!
+> :rocket: For Rust, the requirement is to have a `Cargo.toml` file at the root of your repository.
 
 ## Installation
 

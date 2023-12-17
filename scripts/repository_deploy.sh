@@ -33,6 +33,10 @@ if [ -f "requirements.txt" ]; then
     VALID_CRITERIA=$((VALID_CRITERIA+1))
     LANGUAGE="python"
 fi
+if [ -f "Cargo.toml" ]; then
+    VALID_CRITERIA=$((VALID_CRITERIA+1))
+    LANGUAGE="rust"
+fi
 
 if [ $VALID_CRITERIA -eq 0 ]; then
     echo "This repository is not whanos-compatible"

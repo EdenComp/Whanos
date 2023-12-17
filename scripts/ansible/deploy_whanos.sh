@@ -22,5 +22,5 @@ else
     bash $GIT_ROOT_PATH/scripts/ansible/create_vault.sh
 fi
 
-#bash $GIT_ROOT_PATH/scripts/ansible/deploy_kubernetes.sh ${@:2}
+bash $GIT_ROOT_PATH/scripts/ansible/deploy_kubernetes.sh ${@:2}
 bash $GIT_ROOT_PATH/scripts/ansible/deploy_jenkins.sh

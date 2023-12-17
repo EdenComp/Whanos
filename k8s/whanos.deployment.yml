@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: whanos-deployment
+  name: whanos-NAME-deployment
   labels:
-    app: whanos
+    app: whanos-NAME
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: whanos
+      app: whanos-NAME
   template:
     metadata:
       labels:
-        app: whanos
+        app: whanos-NAME
     spec:
       imagePullSecrets:
         - name: regcred
       containers:
-        - name: whanos
+        - name: whanos-NAME
           image: IMAGE
           resources:
             limits:

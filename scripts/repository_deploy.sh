@@ -54,4 +54,10 @@ fi
 
 docker push ghcr.io/edencomp/whanos-$IMAGE_NAME:latest
 
-# TODO: k8s
+if [ -f "whanos.yml" ]; then
+  mkdir -p ./k8s
+  cat $SCRIPT_DIR/../k8s/whanos.deployment.yml | sed "s/IMAGE/ghcr.io\/edencomp\/whanos-$IMAGE_NAME:latest/g" > ./k8s/whanos.deployment.yml
+  cp $SCRIPT_DIR/../k8s/whanos.service.yml ./k8s/whanos.service.yml
+
+  kubectl apply --insecure-skip-tls-verify -f ./k8s/whanos.deployment.yml -f ./k8s/whanos.service.yml
+fi

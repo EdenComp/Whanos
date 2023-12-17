@@ -116,3 +116,23 @@
     src: ./kubeconfig
     dest: /var/lib/jenkins/.kube/config
     mode: 0755
+
+- name: Get Docker authentication data
+  shell: 'cat /var/lib/jenkins/.docker/config.json'
+  register: docker_auth
+
+- name: Create Kubernetes Secret
+  become: true
+  become_user: jenkins
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: regcred
+        namespace: default
+      data:
+        .dockerconfigjson: "{{ docker_auth.stdout | b64encode | regex_replace('\n', '') }}"
+      type: kubernetes.io/dockerconfigjson
+    validate_certs: no

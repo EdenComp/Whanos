@@ -1,0 +1,55 @@
+- name: Install required packages
+  become: true
+  apt:
+    name:
+      - git
+      - unzip
+    state: present
+
+- name: Install Docker key
+  become: true
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+
+- name: Install Docker repo
+  become: true
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu focal stable"
+    state: present
+
+- name: Install Docker
+  become: true
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: true
+
+- name: Get latest kubectl version
+  uri:
+    url: https://dl.k8s.io/release/stable.txt
+    return_content: yes
+  register: kubectl_version
+
+- name: Download the latest kubectl release
+  uri:
+    url: https://dl.k8s.io/release/{{ kubectl_version.content }}/bin/linux/amd64/kubectl
+    dest: /tmp/kubectl
+    status_code: 200,304
+  register: kubectl
+
+- name: Move kubectl and change permissions
+  file:
+    src: "{{ kubectl.path }}"
+    dest: /usr/local/bin/kubectl
+    state: hard
+    owner: root
+    group: root
+    mode: "+x"
+
+- name: Copy Whanos images
+  synchronize:
+    src: ../../../images
+    dest: /whanos
+    rsync_opts:
+      - "--exclude=node_modules"

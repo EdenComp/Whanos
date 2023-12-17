@@ -4,6 +4,8 @@ SHELL ["/bin/bash", "-c"]
 
 WORKDIR /ansible
 
+RUN apt update ; apt install emacs-nox -y
+
 RUN pip install --upgrade pip
 RUN pip install ansible
 RUN curl https://pyenv.run | bash

@@ -3,6 +3,11 @@
   roles:
     - base
 
+- name: Master role - Applies to the main machine
+  hosts: master
+  roles:
+      - master
+
 - name: Jenkins role - Applies to the main machine
   hosts: jenkins
   roles:

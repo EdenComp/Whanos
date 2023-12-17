@@ -25,6 +25,7 @@
   apt:
     name: "jenkins"
     state: present
+    update_cache: true
   register: jenkins_install
 
 - name: Add jenkins user to group docker
@@ -104,3 +105,14 @@
     name: jenkins
     state: restarted
     enabled: true
+
+- name: Create Kubernetes configuration directory
+  ansible.builtin.file:
+    path: /var/lib/jenkins/.kube
+    state: directory
+
+- name: Copy Kubernetes credentials
+  ansible.builtin.copy:
+    src: ./kubeconfig
+    dest: /var/lib/jenkins/.kube/config
+    mode: 0755

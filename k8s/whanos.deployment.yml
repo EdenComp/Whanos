@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whanos-deployment
+  labels:
+    app: whanos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whanos
+  template:
+    metadata:
+      labels:
+        app: whanos
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: whanos
+          image: IMAGE
+          resources:
+            limits:
+              memory: "256M"
+              cpu: "500m"
+          ports:
+            - containerPort: 8000

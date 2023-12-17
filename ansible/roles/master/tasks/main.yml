@@ -3,8 +3,16 @@
   apt:
     name:
       - git
+      - python3-pip
       - unzip
     state: present
+
+- name: Install Kubernetes python package
+  become: true
+  pip:
+    name: kubernetes
+    state: present
+
 
 - name: Install Docker key
   become: true
@@ -53,3 +61,15 @@
     dest: /whanos
     rsync_opts:
       - "--exclude=node_modules"
+
+- name: Copy deployment scripts
+  ansible.builtin.copy:
+    src: ../../../scripts
+    dest: /whanos
+    mode: 0755
+
+- name: Copy k8s configurations
+  ansible.builtin.copy:
+    src: ../../../k8s
+    dest: /whanos
+    mode: 0755

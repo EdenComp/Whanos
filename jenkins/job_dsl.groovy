@@ -39,11 +39,17 @@ freeStyleJob('Whanos_base_images/whanos-befunge') {
     }
 }
 
+freeStyleJob('Whanos_base_images/whanos-rust') {
+    steps {
+        shell('docker build -t whanos-rust -f /whanos/images/rust/Dockerfile.base .')
+    }
+}
+
 freeStyleJob('Whanos_base_images/Build all base images') {
     keepDependencies(true)
     concurrentBuild(true)
     publishers {
-        downstream("whanos-c, whanos-java, whanos-python, whanos-javascript, whanos-befunge", "SUCCESS")
+        downstream("whanos-c, whanos-java, whanos-python, whanos-javascript, whanos-befunge, whanos-rust", "SUCCESS")
     }
 }
 
